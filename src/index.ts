@@ -19,5 +19,5 @@ const Modules = {
   CacheModule,
 };
 
-export { Auth, Consumer, Filters, Kafka, Middlewares, Models, Modules, NestJs, Repository };
+export { Auth, Consumer, Filters, Kafka, Middlewares, Modules, NestJs };
 
