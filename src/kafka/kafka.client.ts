@@ -12,7 +12,7 @@ export class KafkaClient {
     this.kafka = new Kafka({
       clientId: clientId,
       brokers: brokers?.split(',') ?? ['localhost:9092'],
-      logLevel: logLevel.INFO,
+      logLevel: logLevel.WARN,
     });
   }
 
