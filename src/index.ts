@@ -13,6 +13,7 @@ import { NestJsModule } from './nestjs/nestjs.module';
 import { RepositoryModule } from './repository';
 import { SharedModule } from './shared.module';
 import { ConsumerModule } from './consumer';
+import { CacheModule } from './cache/cache.module';
 
 const Modules = {
   KafkaModule,
@@ -20,5 +21,7 @@ const Modules = {
   AuthModule,
   NestJsModule,
   ConsumerModule,
+  CacheModule,
 };
+
 export { Auth, Filters, Kafka, Middlewares, Models, Modules, NestJs, Repository, Consumer };
