@@ -6,6 +6,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { DocumentBuilder } from '@nestjs/swagger/dist/document-builder';
 import { CorrelationIdInterceptor } from './interceptors/correlation.id';
 import { ContextLogger } from './logger/context.logger';
+import * as morgan from "morgan";
 
 const bootstrap = async (
   application: any,
@@ -43,6 +44,20 @@ const bootstrap = async (
 
   app.useGlobalInterceptors(new CorrelationIdInterceptor(service));
 
+  morgan.token('id', function getId (req: any) {
+    return req.headers["x-correlation-id"]?.toString();
+  })
+  
+  app.use(
+    morgan("[:id] :method :url :response-time", {
+      stream: {
+        write: (message: any) => {
+          Logger.log(message, "HTTP");
+        },
+      },
+    }),
+  );
+  
   if (process.env.NODE_ENV === 'development') {
     app.enableCors({
       origin: '*',
