@@ -32,15 +32,18 @@ jobs:
             yarn version --patch
           fi
       - run: yarn build
-      - run: yarn publish
+      - run: npm publish --registry=https://npm.pkg.github.com/
+        name: Publish to GitHub Package Registry
         env:
           NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
       - run: |
           npm config set //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
-          npm publish
+          npm publish --access=public
+        name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: |
           git push origin HEAD:${{ github.ref }}
+        name: Push Version
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -1,12 +1,13 @@
 {
   "name": "@jescrich/nestjs-toolkit",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "NestJS Toolkit",
   "license": "MIT",
   "author": "José Escrich",
   "main": "dist/index.js",
   "module": "index.js",
   "types": "index.d.ts",
+  "private": false,
   "files": [
     "**/*.js",
     "**/*.d.ts"
@@ -77,8 +78,5 @@
   },
   "_moduleAliases": {
     "@this/*": "*"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
