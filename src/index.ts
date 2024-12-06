@@ -8,14 +8,14 @@ import * as Repository from './repository';
 import * as Models from './repository/models';
 
 import { AuthModule } from './auth';
-import { KafkaClientModule } from './kafka';
+import { KafkaModule } from './kafka';
 import { NestJsModule } from './nestjs/nestjs.module';
 import { RepositoryModule } from './repository';
 import { SharedModule } from './shared.module';
 import { ConsumerModule } from './consumer';
 
 const Modules = {
-  KafkaClientModule,
+  KafkaModule,
   RepositoryModule,
   AuthModule,
   NestJsModule,

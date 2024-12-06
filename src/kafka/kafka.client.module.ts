@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { KafkaClient } from './kafka.client';
 
 @Module({})
-export class KafkaClientModule {
+export class KafkaModule {
   static register(parmas: { clientId: string; brokers: string }): DynamicModule {
     const { clientId, brokers } = parmas;
 
@@ -19,7 +19,7 @@ export class KafkaClientModule {
       },
     ];
     return {
-      module: KafkaClientModule,
+      module: KafkaModule,
       providers,
       exports: [KafkaClient],
     };
