@@ -6,7 +6,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { DocumentBuilder } from '@nestjs/swagger/dist/document-builder';
 import { CorrelationIdInterceptor } from './interceptors/correlation.id';
 import { ContextLogger } from './logger/context.logger';
-import * as morgan from "morgan";
+import * as morgan from 'morgan';
 
 const bootstrap = async (
   application: any,
@@ -37,27 +37,30 @@ const bootstrap = async (
     });
     await microservice.listen();
   }
-  
+
   app.useGlobalPipes(new ValidationPipe());
 
   const service = app.get<HttpService>(HttpService);
 
   app.useGlobalInterceptors(new CorrelationIdInterceptor(service));
 
-  morgan.token('id', function getId (req: any) {
-    return req.headers["x-correlation-id"]?.toString();
-  })
-  
+  morgan.token('id', function getId(req: any) {
+    return req.headers['x-correlation-id']?.toString();
+  });
+
   app.use(
-    morgan("[:id] :method :url :response-time", {
+    morgan('[:id] :method :url :response-time', {
       stream: {
         write: (message: any) => {
-          Logger.log(message, "HTTP");
+          Logger.log(message, 'HTTP');
         },
+      },
+      skip: (req: any, res: any) => {
+        return req.url.includes('api-explorer') || req.url.includes('health') || req.url.includes('healthcheck');
       },
     }),
   );
-  
+
   if (process.env.NODE_ENV === 'development') {
     app.enableCors({
       origin: '*',
