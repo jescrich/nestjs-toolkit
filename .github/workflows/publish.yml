@@ -4,10 +4,9 @@ on:
   release:
     types: [created]
   push:
-    branches: [ "main", "develop" ]
+    branches: ['main', 'develop']
     paths-ignore:
-      - 'package.json'
-
+      - 'package.json' # Avoid infinite loop caused by version changes pushed during the workflow
   workflow_dispatch:
 
 jobs:
@@ -24,12 +23,18 @@ jobs:
       - run: |
           git config --global user.email "gitops@joseescrich.com"
           git config --global user.name "jes"
-          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+          if [ "${{ github.event.ref_name }}" == "develop" ]; then
             yarn version --new-version "$(node -p "require('./package.json').version")-snapshot.$(date +%Y%m%d%H%M%S)"
-          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+          elif [ "${{ github.event.ref_name }}" == "main" ]; then
             yarn version --patch
           fi
       - run: yarn build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            package.json # Include updated package.json in the artifacts
 
   publish-github:
     name: Publish to GitHub
@@ -39,26 +44,25 @@ jobs:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v4
-      - run: cp -r ./dist/* .
-      - run: cp package.json .
-      - run: yarn publish
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+      - run: yarn publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
-      
+          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+
   publish-npm:
     name: Publish to npm
     runs-on: ubuntu-latest
     needs: setup
     steps:
-      - uses: actions/checkout@v4
-      - run: cp -r ./dist/* .
-      - run: cp package.json .
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
       - run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
           npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   push-version:
@@ -67,8 +71,9 @@ jobs:
     needs: [publish-github, publish-npm]
     steps:
       - uses: actions/checkout@v4
-      - run: cp package.json .
       - run: |
+          git add package.json
+          git commit -m "Update version [skip ci]" || echo "No changes to commit"
           git push origin HEAD:${{ github.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
