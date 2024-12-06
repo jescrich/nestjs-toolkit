@@ -32,9 +32,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: |
-            dist/
-            package.json # Include updated package.json in the artifacts
+          path: ${{ github.workspace }}/**
 
   publish-github:
     name: Publish to GitHub
