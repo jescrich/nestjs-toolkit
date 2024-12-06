@@ -6,7 +6,12 @@ export class CacheModule {
   static register(params: { redis: { host: string; port: number } }) {
     return {
       module: CacheModule,
-      providers: [CacheService],
+      providers: [
+        {
+          provide: CacheService,
+          useValue: new CacheService(params),
+        }
+      ],
       exports: [CacheService],
     };
   }
