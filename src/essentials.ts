@@ -19,10 +19,15 @@ const Essentials = {
     return [
       NestJsModule,
       config?.cache?.enabled
-        ? { module: CacheModule, redis: { host: config.cache.host, port: config.cache.port } }
+        ? CacheModule.register({
+            redis: { host: config?.cache?.host ?? 'localhost', port: config?.cache?.port ?? 6379 },
+          })
         : null,
       config?.kafka?.enabled
-        ? { module: KafkaModule, clientId: config.kafka.clientId, brokers: config.kafka.brokers }
+        ? KafkaModule.register({
+            clientId: config?.kafka?.clientId ?? 'client',
+            brokers: config?.kafka?.brokers ?? 'localhost:9092',
+          })
         : null,
     ].filter((module) => module !== null);
   },
