@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CacheService } from '@this/cache';
 import { CacheModule } from '@this/cache/cache.module';
+import { chain } from 'lodash';
 
 describe('CacheModule', () => {
   let cacheService: CacheService;
@@ -10,17 +11,32 @@ describe('CacheModule', () => {
       imports: [
         CacheModule.register({
           redis: {
-            host: 'test-host',
-            port: 1234,
+            host: 'localhost',
+            port: 6379,
           },
         }),
       ],
     }).compile();
 
     cacheService = module.get<CacheService>(CacheService);
+    cacheService.onModuleInit();
   });
 
   it('should be defined', () => {
     expect(cacheService).toBeDefined();
+  });
+
+  it('should resolve', async () => {
+    const result = await cacheService.resolve('test', async () => 'test', 1);
+    expect(result).toBe('test');
+  });
+
+  it('should invalidate', async () => {
+    await cacheService.set('test', 'test', 1);
+    const result = await cacheService.get('test');
+    expect(result).toBe('test');
+    await cacheService.invalidate('test');
+    const cached = await cacheService.get('test');
+    expect(cached).toBeNull();
   });
 });

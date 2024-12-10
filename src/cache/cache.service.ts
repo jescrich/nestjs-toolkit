@@ -1,9 +1,10 @@
 import KeyvRedis, { Keyv } from '@keyv/redis';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CacheManagerStore, createCache } from 'cache-manager';
 
 @Injectable()
 export class CacheService implements OnModuleInit {
+  private readonly logger = new Logger(CacheService.name);
   private cache: any;
   private readonly config: { redis?: { host: string; port: number } };
 
@@ -11,8 +12,9 @@ export class CacheService implements OnModuleInit {
     this.config = config;
   }
 
-  async onModuleInit() {
-    this.cache = await createCache({
+  onModuleInit() {
+    this.logger.log('Initializing Cache Service: ${this.config.redis?.host}:${this.config.redis?.port}');
+    this.cache = createCache({
       stores: [
         //  Redis Store
         new Keyv({
@@ -20,6 +22,24 @@ export class CacheService implements OnModuleInit {
         }),
       ],
     });
+
+    this.cache.on('error', (error: any) => {
+      this.logger.error('Cache Error', error);
+    });
+    this.cache.on('reconnecting', () => {
+      this.logger.warn('Cache Reconnecting');
+    });
+    this.cache.on('connected', () => {
+      this.logger.log('Cache Connected');
+    });
+    this.cache.on('disconnected', () => {
+      this.logger.warn('Cache Disconnected');
+    });
+    this.cache.on('ready', () => { 
+      this.logger.log('Cache Ready');
+    });
+
+    this.logger.log('Cache Service Initialized');
   }
 
   async resolve<T>(key: string, resolver: () => Promise<any>, ttl?: number): Promise<Awaited<T>> {
