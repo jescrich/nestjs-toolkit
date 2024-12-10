@@ -19,7 +19,6 @@ describe('CacheModule', () => {
     }).compile();
 
     cacheService = module.get<CacheService>(CacheService);
-    cacheService.onModuleInit();
   });
 
   it('should be defined', () => {

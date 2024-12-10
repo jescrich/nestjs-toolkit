@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { CacheService } from './cache.service';
 
 @Module({})
 export class CacheModule {
-  static register(params: { redis: { host: string; port: number } }) {
+  static register(params: { redis: { host: string; port: number } }): DynamicModule {
     return {
       module: CacheModule,
       providers: [
