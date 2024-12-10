@@ -9,7 +9,7 @@ export class CacheModule {
       providers: [
         {
           provide: CacheService,
-          useValue: new CacheService(params),
+          useFactory: () => new CacheService(params),
         }
       ],
       exports: [CacheService],
