@@ -3,16 +3,13 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CacheManagerStore, createCache } from 'cache-manager';
 
 @Injectable()
-export class CacheService implements OnModuleInit {
+export class CacheService {
   private readonly logger = new Logger(CacheService.name);
   private cache: any;
   private readonly config: { redis?: { host: string; port: number } };
 
   constructor(config: { redis?: { host: string; port: number } }) {
     this.config = config;
-  }
-
-  onModuleInit() {
     this.logger.log('Initializing Cache Service: ${this.config.redis?.host}:${this.config.redis?.port}');
     this.cache = createCache({
       stores: [

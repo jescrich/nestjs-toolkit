@@ -9,7 +9,7 @@ describe('CacheModule', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        CacheModule.register({
+        CacheModule.register({  
           redis: {
             host: 'localhost',
             port: 6379,
