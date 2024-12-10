@@ -10,6 +10,7 @@ import { CacheModule } from './cache/cache.module';
 import { ConsumerModule } from './consumer';
 import { KafkaModule } from './kafka';
 import { NestJsModule } from './nestjs/nestjs.module';
+import { Essentials } from './essentials';
 
 const Modules = {
   KafkaModule,
@@ -17,7 +18,17 @@ const Modules = {
   NestJsModule,
   ConsumerModule,
   CacheModule,
+  Essentials,
 };
 
-export { Auth, Consumer, Filters, Kafka, Middlewares, Modules, NestJs };
+const JESToolkit = {
+  Modules,
+  Auth,
+  Consumer,
+  Kafka,
+  Middlewares,
+  NestJs,
+};
+
+export { Auth, Consumer, Filters, Kafka, Middlewares, Modules, NestJs, JESToolkit };
 
