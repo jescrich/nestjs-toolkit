@@ -19,7 +19,7 @@ export class CacheService {
         }),
       ],
     });
-
+    
     this.cache.on('error', (error: any) => {
       this.logger.error('Cache Error', error);
     });

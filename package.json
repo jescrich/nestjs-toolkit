@@ -5,12 +5,12 @@
   "license": "MIT",
   "author": "José Escrich",
   "main": "dist/index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": false,
   "files": [
-    "**/*.js",
-    "**/*.d.ts"
+    "dist/*.js",
+    "dist/*.d.ts"
   ],
   "scripts": {
     "prebuild": "npm run clean",
@@ -22,9 +22,7 @@
     "test:watch": "jest --watch --config jest.config.cjs --no-watchman",
     "test:cov": "jest --coverage --config jest.config.cjs --no-watchman",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prePack": "cp -r ./dist/* .",
-    "prepublishOnly": "cp -r ./dist/* ."
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@golevelup/ts-jest": "^0.6.1",
