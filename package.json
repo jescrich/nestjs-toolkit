@@ -1,6 +1,6 @@
 {
   "name": "@jescrich/nestjs-toolkit",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "NestJS Toolkit",
   "license": "MIT",
   "author": "José Escrich",
