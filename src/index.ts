@@ -22,7 +22,7 @@ const Modules = {
   Essentials,
 };
 
-const JESToolkit = {
+const NestJsToolkit = {
   Modules,
   Auth,
   Consumer,
@@ -32,5 +32,5 @@ const JESToolkit = {
   Cache,
 };
 
-export { Auth, Consumer, Filters, Kafka, Middlewares, Modules, NestJs, JESToolkit };
+export { Auth, Consumer, Filters, Kafka, Middlewares, Modules, NestJs, Cache, NestJsToolkit };
 
