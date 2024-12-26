@@ -9,8 +9,7 @@
   "types": "dist/index.d.ts",
   "private": false,
   "files": [
-    "dist/*.js",
-    "dist/*.d.ts"
+    "./dist/**"
   ],
   "scripts": {
     "prebuild": "npm run clean",
