@@ -22,4 +22,6 @@ describe('ConsumerModule', () => {
     it('should be defined', () => {
         expect(consumerService).toBeDefined();
     });
+
+    
 });

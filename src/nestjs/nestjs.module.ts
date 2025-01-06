@@ -11,11 +11,7 @@ import { AllExceptionsFilter } from './filters';
     }),
     HttpModule,
   ],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },
-  ],
+  providers: [AllExceptionsFilter],
+  exports: [AllExceptionsFilter]
 })
 export class NestJsModule {}

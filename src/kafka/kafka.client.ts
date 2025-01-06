@@ -8,7 +8,10 @@ export class KafkaClient {
   private readonly logger = new Logger(KafkaClient.name);
   kafka: Kafka;
 
-  constructor(private readonly clientId?: string, private readonly brokers?: string) {
+  constructor(
+    private readonly clientId?: string,
+    private readonly brokers?: string,
+  ) {
     this.kafka = new Kafka({
       clientId: clientId,
       brokers: brokers?.split(',') ?? ['localhost:9092'],
@@ -63,7 +66,7 @@ export class KafkaClient {
 
       const event: T = JSON.parse(content);
 
-      await handler.handle(key, event, payload as any);
+      await handler.handle({ key, event, payload: payload as any });
     };
 
     const sendToDeadLetterQueue = async (message: KafkaMessage) => {
@@ -79,7 +82,7 @@ export class KafkaClient {
         ],
       });
       await producer.disconnect();
-      this.logger.warn(`Message offset ${message.offset} sent to DLQ.`);
+      this.logger.warn(`Message offset ${message.offset} sent to DLQ.`, topic);
     };
 
     const runConsumer = async () => {
@@ -100,30 +103,30 @@ export class KafkaClient {
             const retries = retryCounts.get(offsetKey) || 0;
 
             try {
-              this.logger.log(`Processing message offset ${message.offset} ${message.key}`);
+              this.logger.log(`Processing message offset ${message.offset} ${message.key}`, topic);
 
               const key = message.key?.toString() ?? '';
               await processMessage(key, message.value, message);
 
               resolveOffset(message.offset);
-              this.logger.log(`Message offset ${message.offset} processed successfully`);
+              this.logger.log(`Message offset ${message.offset} processed successfully`, topic);
               retryCounts.delete(offsetKey);
             } catch (error) {
-              this.logger.error(`Error processing message offset ${message.offset}: ${error}`);
+              this.logger.error(`Error processing message offset ${message.offset}: ${error}`, topic);
 
               if (retries < RETRY_LIMIT) {
                 retryCounts.set(offsetKey, retries + 1);
 
-                this.logger.warn(`Retrying message offset ${message.offset}...`);
+                this.logger.warn(`Retrying message offset ${message.offset}...`, topic);
 
                 consumer.pause([{ topic, partitions: [partition] }]);
 
                 setTimeout(async () => {
-                  this.logger.log(`Resuming message offset ${message.offset}...`);
+                  this.logger.log(`Resuming message offset ${message.offset}...`, topic);
                   consumer.resume([{ topic, partitions: [partition] }]);
                 }, RETRY_DELAY_MS);
               } else {
-                this.logger.warn(`Exceeded retry limit for message offset ${message.offset}`);
+                this.logger.warn(`Exceeded retry limit for message offset ${message.offset}`, topic);
                 resolveOffset(message.offset);
                 // Send to DLQ after exceeding retry limit
                 await sendToDeadLetterQueue(message);

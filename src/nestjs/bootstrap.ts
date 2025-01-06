@@ -42,6 +42,10 @@ const bootstrap = async (
 
   const service = app.get<HttpService>(HttpService);
 
+  if (!service) {
+    throw new Error('HttpService not found, check if you have imported the NestJsModule or HttpModule');
+  }
+
   app.useGlobalInterceptors(new CorrelationIdInterceptor(service));
 
   morgan.token('id', function getId(req: any) {

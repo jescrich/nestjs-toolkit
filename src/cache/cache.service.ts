@@ -10,7 +10,7 @@ export class CacheService {
 
   constructor(config: { redis?: { host: string; port: number } }) {
     this.config = config;
-    this.logger.log('Initializing Cache Service: ${this.config.redis?.host}:${this.config.redis?.port}');
+    this.logger.log(`Initializing Cache Service: ${this.config.redis?.host}:${this.config.redis?.port}`);
     this.cache = createCache({
       stores: [
         //  Redis Store

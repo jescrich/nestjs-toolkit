@@ -1,3 +1,4 @@
+import { Injectable, Module } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CacheService } from '@this/cache';
 import { CacheModule } from '@this/cache/cache.module';
@@ -9,13 +10,35 @@ describe('CacheModule', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        CacheModule.register({  
+        CacheModule.register({
           redis: {
             host: 'localhost',
             port: 6379,
           },
         }),
       ],
+    }).compile();
+
+    cacheService = module.get<CacheService>(CacheService);
+  });
+
+  it('should be registered on nested modules', async () => {
+    @Injectable()
+    class FooService {
+      constructor(private readonly cacheService: CacheService) {}
+      async foo() {
+        return 'foo';
+      }
+    }
+    @Module({
+      imports: [CacheModule.register({ redis: { host: 'localhost', port: 6379 } })],
+      providers: [FooService],
+    })
+    class FooModule {}
+
+
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [FooModule],
     }).compile();
 
     cacheService = module.get<CacheService>(CacheService);

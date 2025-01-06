@@ -1,7 +1,7 @@
-const instances = new Map();
-
-const Consumer = (target: Function) => {
-    instances.set(target.name, target);
+const Handler = (params: { topic: string }) => (target: Function) => {
+    const { topic } = params;
+    Reflect.defineMetadata('topic-consumer', true, target);
+    Reflect.defineMetadata('topic', topic, target);    
 }
 
-export { Consumer }
+export { Handler }

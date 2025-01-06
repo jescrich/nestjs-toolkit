@@ -8,7 +8,7 @@ export class CorrelationIdInterceptor implements NestInterceptor {
   private readonly logger = new Logger(CorrelationIdInterceptor.name);
 
   constructor(private readonly httpService: HttpService) {
-    Logger.log('Initializing CorrelationIdInterceptor');
+    this.logger.log('Initializing CorrelationId Interceptor');
   }
 
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {

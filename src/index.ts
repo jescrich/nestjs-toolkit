@@ -34,3 +34,9 @@ const NestJsToolkit = {
 
 export { Auth, Consumer, Filters, Kafka, Middlewares, Modules, NestJs, Cache, NestJsToolkit };
 
+export * from './auth';
+export * from './cache';
+export * from './consumer';
+export * from './kafka';
+export * from './nestjs';
+export * from './nestjs/filters';

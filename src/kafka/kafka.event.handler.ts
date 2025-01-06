@@ -1,4 +1,3 @@
-
 export interface EventMessage {
   key: Buffer | null;
   value: Buffer | null;
@@ -9,6 +8,6 @@ export interface EventMessage {
   size?: never;
 }
 
-export interface IEventHandler<T> {
-  handle(ket: string, event: T, payload?: EventMessage): Promise<void>;
+export interface IEventHandler<T>  {
+  handle(params: { key: string, event: T, payload?: EventMessage }): Promise<void>;
 }
