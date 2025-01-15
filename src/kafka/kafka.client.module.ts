@@ -1,7 +1,8 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { KafkaClient } from './kafka.client';
 
+@Global()
 @Module({})
 export class KafkaModule {
   static register(parmas: { clientId: string; brokers: string }): DynamicModule {
